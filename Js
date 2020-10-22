@@ -1,0 +1,19 @@
+```<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function displayDate() {
+            document.getElementById("d").innerText = Date();
+        }
+    </script>
+</head>
+<body>
+    <p id="d">此处id在上面被找到，且修改</p>
+    <button onclick="displayDate()">button名字</button>
+</body>
+</html>```
+
+=====
+
