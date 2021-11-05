@@ -1,6 +1,6 @@
 # Vue.js
 
-### 安装(这里使用2的版本)
+`安装(这里使用2的版本)`
 
 #### 兼容性
 
@@ -10,7 +10,7 @@ Vue **不支持** IE8 及以下版本，因为 Vue 使用了 IE8 无法模拟的
 
 Vue 在其所有项目中公布的功能和行为都遵循[语义化版本控制](https://semver.org/lang/zh-CN/)。对于未公布的或内部暴露的行为，其变更会描述在[发布说明](https://github.com/vuejs/vue/releases)中。
 
-### [Vue Devtools](https://cn.vuejs.org/v2/guide/installation.html#Vue-Devtools)
+#### [Vue Devtools](https://cn.vuejs.org/v2/guide/installation.html#Vue-Devtools)
 
 在使用 Vue 时，我们推荐在你的浏览器上安装 [Vue Devtools](https://github.com/vuejs/vue-devtools#vue-devtools)。它允许你在一个更友好的界面中审查和调试 Vue 应用。
 
@@ -38,9 +38,7 @@ Vue 在其所有项目中公布的功能和行为都遵循[语义化版本控制
 
 你可以在 [cdn.jsdelivr.net/npm/vue](https://cdn.jsdelivr.net/npm/vue/) 浏览 NPM 包的源代码。
 
-
-
-### [NPM](https://cn.vuejs.org/v2/guide/installation.html#NPM)
+#### [NPM](https://cn.vuejs.org/v2/guide/installation.html#NPM)
 
 在用 Vue 构建大型应用时推荐使用 NPM 安装[[1\]](https://cn.vuejs.org/v2/guide/installation.html#footnote-1)。NPM 能很好地和诸如 [webpack](https://webpack.js.org/) 或 [Browserify](http://browserify.org/) 模块打包器配合使用。同时 Vue 也提供配套工具来开发[单文件组件](https://cn.vuejs.org/v2/guide/single-file-components.html)。
 
@@ -49,7 +47,7 @@ Vue 在其所有项目中公布的功能和行为都遵循[语义化版本控制
 $ npm install vue
 ```
 
-### [命令行工具 (CLI)](https://cn.vuejs.org/v2/guide/installation.html#命令行工具-CLI)
+#### [命令行工具 (CLI)](https://cn.vuejs.org/v2/guide/installation.html#命令行工具-CLI)
 
 Vue 提供了一个[官方的 CLI](https://github.com/vuejs/vue-cli)，为单页面应用 (SPA) 快速搭建繁杂的脚手架。它为现代前端工作流提供了开箱即用的构建设置。只需要几分钟的时间就可以运行起来并带有热重载、保存时 lint 校验，以及生产环境可用的构建版本。更多详情可查阅 [Vue CLI 的文档](https://cli.vuejs.org/)。
 
@@ -57,9 +55,25 @@ CLI 工具假定用户对 Node.js 和相关构建工具有一定程度的了解�
 
 
 
+### 遇到问题解决
+
+###### 刷新页面闪屏
+
+遇到这样的问题可以考虑创建一个标签，然后使用css样式显示默认为none
+
+``` html
+<style> [v-clock]{display:none;} </style>
+...
+<div id="app" v-clock>
+    ....
+</div>
+```
+
+
+
 ## Vue基本语法
 
-v-bind:title 悬浮显示消息 `<span v-bind:title=“message”><span>`
+#### v-bind:title 悬浮显示消息 `<span v-bind:title=“message”><span>`
 
 例如v-bind:= OR {{}} 称为指令
 
@@ -81,27 +95,376 @@ v-bind:title 悬浮显示消息 `<span v-bind:title=“message”><span>`
 
 `< v-for=" item in 数组名"	v-for=" (item,index) in 数组名"></>`
 
+``` HTML
+<!DOCTYPE html>
+<html>
+<head>
+    <title>This Vue</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <!-- <span v-if="ok">
+                这里是正确时候的输出</span>
+            <span v-else>
+                这里是错误时候的输出</span> -->
+
+            <span v-if="num==1">A</span>
+            <span v-else-if="num===2">B</span>
+            <span v-else=>C</span>
+        </div>
+        <button v-on:click="sayHi">Click me now!</button>
+    </div>
+    <script>
+        var app = new Vue({
+            el:'#app',
+            data:{
+                num:3,
+                ok:true
+            }
+        })
+    </script>
+</body>
+</html>
+```
+
 
 
 ## Vue绑定事件
+
+#### v-on 可以监听DOM事件
+
+``` html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>This Vue</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div v-bind:title="message">
+            这里是正确时候的输出
+        </div>
+        <div>
+            这里是错误时候的输出
+        </div>
+        <button v-on:click="sayHi">Click me now!</button>
+    </div>
+    <script>
+        var app = new Vue({
+            el:'#app',
+            data:{
+                message:'This is Vue learn now',
+            },
+            methods:{
+                sayHi:function(){
+                    alert(this.message)
+                }
+            }
+        })
+    </script>
+</body>
+</html>
+```
 
 
 
 ## Vue双向绑定
 
+####  v-model
+
+``` html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>This Vue</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <span>请输入用户名:</span>
+            <input type="text" value="" v-model="message"/>{{message}}
+        </div>
+    </div>
+    <script>
+        var app = new Vue({
+            el:'#app',
+            data:{
+                message:'',
+            },
+        })
+    </script>
+</body>
+</html>
+```
+
+``` html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>This Vue</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <input type="radio" name="sex" value="男" v-model="message"/>男
+            <input type="radio" name="sex" value="女" v-model="message"/>女
+            {{message}}
+        </div>
+            
+    </div>
+    <script>
+        var app = new Vue({
+            el:'#app',
+            data:{
+                message:'',
+            },
+        })
+    </script>
+</body>
+</html>
+```
+
+``` html 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>This Vue</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <select v-model="message">
+                <option value="" disabled>--请选择--</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+            {{message}}
+        </div>            
+    </div>
+    <script>
+        var app = new Vue({
+            el:'#app',
+            data:{
+                message:'',
+            },
+        })
+    </script>
+</body>
+</html>
+```
+
 
 
 ## Vue组件讲解
 
+#### 什么是组件
 
+组件就是可复用的vue实例，往白了说就是一组可以重复使用的模板，类似JSTL的自定义标签,Thymeleaf 的 th:fragment
+
+#### 第一个Vue组件
+
+一般通过vue-cli 创建.vue 模板文件的方式开发。接下来只展示什么是组件
+
+``` html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>This Vue</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <ming></ming>
+    </div>
+    <script>
+        // 定义一个Vue组件Component
+        Vue.component("ming",{
+            template:"<h1>这里是模板</h1>"
+        })
+        var app = new Vue({
+            el:'#app',
+            data:{
+                message:'',
+            },
+        })
+    </script>
+</body>
+</html>
+```
+
+#### 第二个Vue组件
+
+这个有点不太好理解，步骤如下：
+
+贴上CDN
+
+``` html
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+```
+
+创建一个根部div的id：app
+
+``` html
+    <div id="app">
+    </div>
+```
+
+老步骤的new Vue,创建一个为了学习用的数组arrays
+
+``` html
+    <script>
+        var app = new Vue({
+            el:'#app',
+            data:{
+                arrays:["java","linux","c++","c","python"]
+            }
+        })
+    </script>
+```
+
+创建Vue组件rong,设置模板，从父级拿值
+
+```html
+        Vue.component("rong",{
+            props:["xing"],
+            template:"<h1>{{xing}}</h1>"
+        })
+```
+
+在根部div中引用,v-for循环输出, v-bind:XXX 缩写 :XXX
+
+``` html
+    <div id="app">
+        <rong v-for="item in arrays"
+        :xing="item"></rong>
+    </div>
+```
+
+最后完整文件
+
+``` html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>This Vue</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <rong v-for="item in arrays"
+        :xing="item"></rong>
+    </div>
+    <script>
+        Vue.component("rong",{
+            props:["xing"],
+            template:"<h1>{{xing}}</h1>"
+        })
+        var app = new Vue({
+            el:'#app',
+            data:{
+                arrays:["java","linux","c++"
+                ,"c","python"]
+            }
+        })
+    </script>
+</body>
+</html>
+```
+
+有点不太好理解，但是仔细想想，如果想要父组件往子组件传值或者子组件往父组件传值该怎么办呢？
+
+`父组件通过 props 向下传递数据给子组件Axios异步通信，子组件通过 events 给父组件发送消息`
 
 ## Axios异步通信
+
+#### How to install
+
+`npm install --save axios vue-axios`
+
+And in your entry file:
+
+``` vue
+import Vue from 'vue'
+
+import axios from 'axios'
+
+import VueAxios from 'vue-axios'
+
+Vue.use(VueAxios,axios)
+```
+
+#### 为什么使用 Axios
+
+由于Vue.js是一个视图层框架，作者（尤雨溪）严格遵守SoC（关注度分离原则），所以Vue.js不包括AJAX的通信能力。2.0版本之前作者单独开发了vue-resource的插件，但是因为操作Dom太过麻烦。
+
+#### 第一个Axios 应用程序
+
+引入js文件，分别是vue，axios的
+
+`    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>`
+
+`<script src="https://unpkg.com/axios/dist/axios.min.js"></script>`
+
+老样子，写出div配上id：app，以及vue实例
+
+``` html
+```
+
+mounted()，在Vue的生命周期中，这个方法过去就是渲染了，该方法在整个周期中只会执行一次
+
+``` html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>This Vue</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div v-for="item in info">
+            <span>{{item}}</span>
+        </div>
+    </div>
+    <script>
+        var app = new Vue({
+            el:'#app',
+            data(){//data 属性 vm , data()是函数
+                return{// 请求返回的参数必须与json格式一致,可不写，但不能写错
+                    info:[]
+                }},
+            mounted(){//钩子函数，链式编程
+            // mounted函数在整个实例中只会执行一次
+            // 一般用来请求Ajax数据
+                axios.get('http://118.25.42.197:9930/api/movies/categories').then(response=>(console.log(response.data)));
+                axios.get('http://118.25.42.197:9930/api/movies/categories').then(response=>(this.info=response.data));
+            }
+        })
+    </script>
+</body>
+</html>
+```
 
 
 
 ## 计算属性
 
+#### 什么叫计算属性
 
+属性是一个名词，计算是一个动词。简单来说就是将计算结果缓存的一个过程
+
+每一次调用方法都会需要进行计算，既然有计算那就有计算过程，必定产生系统开销；如果这个结果不需要经常变化，则可以选择将不常变化的结果缓存起来。
+
+使用computed，如果在这里的方法和methods中的重名，methods的优先级高。
+
+computed中的方法使用不需要加（），而methods中的方法需要使用
 
 ## 插槽slot
 
