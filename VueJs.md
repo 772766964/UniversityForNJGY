@@ -69,6 +69,18 @@ CLI 工具假定用户对 Node.js 和相关构建工具有一定程度的了解�
 </div>
 ```
 
+###### computed计算属性和watch监听的区别
+
+``` 
+computed计算属性
+	用来声明式描述一个值依赖了其它的值
+	当在模板里把数据绑定到一个计算属性上时，Vue会在其依赖的任何值导致该计算属性改变时更新DOM。这个功能非常强大，可以让代码更加声明式、数据驱动并且易于维护
+
+watch侦听器
+	当监听的变量的值发生变化时，调用对应的方法。
+	在watch里当变量的值发生变化时，就会调用变量的方法，方法里面的形参对应的是变量的新值和旧值，而计算属性computed计算的是变量依赖的值,它不能计算在变量中已经定义过的变量
+```
+
 
 
 ## Vue基本语法
@@ -169,7 +181,31 @@ CLI 工具假定用户对 Node.js 和相关构建工具有一定程度的了解�
 </html>
 ```
 
+### v-bind详细
 
+|   指令    |            作用            | 缩写形式 |
+| :-------: | :------------------------: | :------: |
+|  v-once   |           单元格           |          |
+|  v-html   |           单元格           |          |
+|  v-bind   |    为HTML标签绑定属性值    |             |
+|   v-if    |          条件渲染          |               |
+| v-else-if |          条件渲染          |                  |
+|  v-show   |    拥有切换DISPLAY的值     |                  |
+|   v-for   |          遍历数组          |                 |
+|   v-on    |       为HTML绑定事件       |                  |
+|  v-model  | 表单元素上创建双向数据绑定 |                 |
+
+## 数组
+
+| 方法名 | 简述 |
+| :-------------: | :------------------------: |
+| push() | 往数组最后面添加一个元素，成功后返回当前数组的长度 |
+| pop() |  删除数组的最后一个元素，成功后返回删除元素的值 |
+| shift()  | 删除数组的第一个元素，成功后返回删除元素的值 |
+| unshift() | 往数组最前面添加一个元素，成功后返回当前数组的长度 |
+| splice() | 第一个参数是想要删除的／元素下标（必选），第二个参数是想要删除的个数（必选），第三个参数是删除后想要在原位置替换的值sort() |
+| sort() |  使数组按照字符编码默认从小到大排序,成功返回排序后的数组reverse() |
+| reverse() | 将数组倒序，成功后返回倒序后的数组 |
 
 ## Vue双向绑定
 
@@ -452,6 +488,41 @@ mounted()，在Vue的生命周期中，这个方法过去就是渲染了，该�
 </html>
 ```
 
+安装：npm install axios -S
+
+导入：import axios from 'axios'
+
+请求方法：get、delete、post、put、patch。。
+
+get:通过URL或者params选项传参
+
+delete:删除数据，传参格式与get相同
+
+post:提交数据，
+
++ 通过选项传参数，默认是json格式
++ 通过URLSearchParams传递表单参数
+
+axios请求方法：
+
+axios(config):通用的发送任意类型请求的方式
+
+axios(url[,config]):可以指定url发送get请求
+
+方法有很多，下个方法是通用的
+
+``` vue
+this.$axios({
+	method:'get',
+	url:'/api/get',	
+	params:{
+		id:12
+	}
+}).then(res=>{
+	this.message=res.data
+})
+```
+
 
 
 ## 计算属性
@@ -476,7 +547,220 @@ computed中的方法使用不需要加（），而methods中的方法需要使�
 
 ## vue-cli
 
+vue脚手架，快速生成vue模板。
+
+vue入口在main.js
+
+build目录用来构建，build.js用来构建一些消息 
+
+## webpack的学习使用
+
+webpack打包工具，将ES6部署成ES5。
+
+举例：
+
+——hello.js
+
+``` vue
+暴露一个sayHi方法
+exports.sayHi = function sayHi(){
+    document.write("hhhh");
+}
+```
 
 
-## 路由
 
+——main.js
+
+``` vue
+var hello = require('./hello');
+hello.sayHi();
+```
+
+
+
+——webpack.config.js 设置打包配置
+
+``` vue
+module.exports = {
+    entry:'./module/main.js',
+    output:{
+        filename:"./js/bundle.js",
+    }
+}
+之后在当前路径下cmd，打出webpack
+```
+
+
+
+——index.html 最后在HTML中引用即可
+
+``` html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>t</title>
+    </head>
+    <body>
+        <script src="dist/js/bundle.js"></script>
+    </body>
+</html>
+```
+
+
+
+## vue-router路由
+
+``` vue
+<router-link to=""></router-link>
+<router-view></router-view>
+```
+
+首先需要安装路由
+
+`npm install vue-router --save-dev`
+
+写几个模块
+
+——Main.vue
+
+``` vue
+ <template>
+    <h2>这里是首页</h2>
+</template>
+
+<script>
+  export default {
+    name : 'Main'
+  }
+</script>
+```
+
+——About.vue
+
+``` vue
+ <template>
+    <h2>关于我</h2>
+</template>
+
+<script>
+  export default {
+    name : 'About'
+  }
+</script>
+```
+
+定义一个router文件夹，专门存放路由
+
+**方法一**
+
+``` vue
+import VueRouter from 'vue-router'
+
+Vue.use(Router)
+
+const routes = [
+  {
+    // 路由路径 后端@RequestMapping
+    path: '/component',
+    //路由名字
+    name: 'component',
+    // 跳转的组件
+    component: Component
+  },
+  {
+    path:'/main',
+    name:'main',
+    component:Main
+  }
+]
+
+const router = new VueRouter({
+  routes
+})
+//暴露方法
+export default router
+```
+
+**方法二**
+
+``` vue
+export default new VueRouter({  
+  routes: [
+    {
+      path:'/main',
+      name:'main',
+      component:Main
+    },
+    {
+      path:'/About',
+      name:'about',
+      component:About
+    }
+  ]
+})
+```
+
+在App.vue中添加路由本课题前两行所写
+
+``` vue
+    <router-link to="/main">首页</router-link>
+    <router-link to="/about">关于我</router-link>
+    <router-view></router-view>
+```
+
+前者引入，类似HTML标签<a>
+
+后者则是展示页面类似搭配<a>的框架标签
+
+最后在main.js中渲染，配置路由
+
+``` vue
+new Vue({
+  // 配置路由
+  router,
+  render: h => h(App)
+}).$mount('#app')
+```
+
+
+
+## vue+elementUI
+
+### 安装
+
+#### [¶](https://element.eleme.cn/#/zh-CN/component/installation#npm-an-zhuang)npm 安装(推荐)
+
+推荐使用 npm 的方式安装，它能更好地和 [webpack](https://webpack.js.org/) 打包工具配合使用。
+
+```shell
+npm i element-ui -S
+```
+
+#### [¶](https://element.eleme.cn/#/zh-CN/component/installation#cdn)CDN
+
+目前可以通过 [unpkg.com/element-ui](https://unpkg.com/element-ui/) 获取到最新版本的资源，在页面上引入 js 和 css 文件即可开始使用。
+
+```html
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+```
+
+我们建议使用 CDN 引入 Element 的用户在链接地址上锁定版本，以免将来 Element 升级时受到非兼容性更新的影响。锁定版本的方法请查看 [unpkg.com](https://unpkg.com/)。
+
+#### 安装SASS 加载器
+
+`cnpm install sass-loader node-sass --save-dev`
+
+## 路由嵌套
+
+
+
+## 参数传递及重定向
+
+
+
+## 404和路由钩子
