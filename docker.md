@@ -1,6 +1,99 @@
 # Docker
 
-## 命令
+
+
+## Docker 安装
+
+
+
+### linux 网卡配置修改（改成yes）
+
+cd /etc/sysconfig/network-scripts
+
+vi ifcfg-ens33
+
+编辑ifcfg-ens33文件 进入文件后执行如下操作: 
+
+①. 按 i 键 进入编辑状态
+
+ ②. 按↑↓键来移动光标, 删除no,输入yes 
+
+③. 按 ESC 键 
+
+④. 输入 :wq 
+
+⑤. 按 ENTER 保存退出
+
+
+
+### 可以为docker设置yum源
+
+```bash
+yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+```
+
+### 可以查看所有仓库中所有docker版本，并选择特定版本安装
+
+```bash
+yum list docker-ce --showduplicates | sort -r
+```
+
+### 安装docker
+
+```bash
+yum install docker-ce docker-ce-cli containerd.io
+```
+
+### 或者安装指定版本
+
+```bash
+yum install docker-ce-<VERSION_STRING> docker-ce-cli-<VERSION_STRING> containerd.io
+```
+
+###  配置镜像加速
+
+中国科学技术大学的开源镜像 https://docker.mirrors.ustc.edu.cn
+
+网易的开源镜像： https://hub-mirror.c.163.com
+
+### 创建与启动容器
+
+```bash
+docker run [options] IMAGE [command] [arg...]
+```
+
+- `-i` 表示运行容器
+- `-t` 表示容器启动后进入其命令行。加入这两个参数后，容器创建就能登录进去。即分配一个伪终端
+- `--name` 为创建的容器命名
+- `-v`表示目录映射关系（前者是宿主机目录，后者是映射到宿主机上的目录），可以使用多个-v做多个目录或文件映射。
+  注意：最好做目录映射，在宿主机上做修改，然后共享到容器上
+- `-d` 在run后面加上-d参数，则会创建一个守护式容器在后台运行（这样创建容器后不会自动登录容器，如果只加`-i -t`两个参数，创建容器后就会自动进容器里）
+- `-p` 表示端口映射，前者是宿主机端口，后者是容器内的映射端口，可以使用多个-p做多个端口映射
+- `-P` 随机使用宿主机的可用端口与容器内暴露的端口映射
+
+##### 5.2.2.1 创建并进入容器
+
+```bash
+docker run -it --name 容器名称 镜像名称:标签 /bin/bash
+```
+
+此命令表示： 通过镜像A创建容器B，运行并进入容器的`/bin/bash`
+
+> 注意：docker 容器运行必须有一个前台进程，如果没有前台进程执行，容器认为是空闲状态，就会自动退出。
+
+
+
+### Docker命令
+
+systemctl start docker 启动
+
+docker ‐v 版本
+
+ps -ef|grep docker 
+
+systemctl enable docker
+
+systemctl stop docker
 
 docker images  展示镜像
 
@@ -22,21 +115,18 @@ docker logs 查看容器运行日志
 
 docker ps 查看容器运行状态
 
-docker run 运行。。
+docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 
 + --name：指定容器名称
 + -p：指定端口映射
 + -d：让容器后台运行
 
-```
-docker run --name my_nginx_2020 -d -p 80:80 --restart=always -e TZ="Asia/Shanghai" nginx:latest
-```
 
-docker stop my_nginx_2020
-
-docker start my_nginx_2020
+docker stop/stop my_nginx_2020
 
 docker run --name containName 80:80 nginx
+
+
 
 
 
@@ -46,14 +136,18 @@ https://www.cnblogs.com/jying/p/12182715.html
 
 ### 步骤一：进入容器
 
-`docker exec -it my_nginx_2020 bash`
+```
+docker run --name my_nginx -d -p 80:80 --restart=always -e TZ="Asia/Shanghai" nginx:latest
+```
+
+`docker exec -it my_nginx bash`
 
 ### 命令解读：
 
 docker exec ：进入容器内部执行命令
 
 + -it：给当前进入的容器一个标准输入输出的终端，允许我们与容器交互
-+ my_nginx_2020：要进入的容器名称
++ my_nginx：要进入的容器名称
 + bash：进入容器后执行的命令，bash是一个linux终端交互命令
 
 ## 案例：Redis容器，并执行redis-cli
@@ -68,9 +162,7 @@ redis-cli
 
 
 
-## linux 网卡配置修改（改成yes）
 
-cd / 进入根目录 cd etc 进入etc目录 cd sysconfig 进入sysconfig目录 cd network-scripts 进入network-scripts vi ifcfg-ens33 编辑ifcfg-ens33文件 进入文件后执行如下操作: ①. 按 i 键 进入编辑状态 ②. 按↑↓键来移动光标, 删除no,输入yes ③. 按 ESC 键 ④. 输入 :wq ⑤. 按 ENTER 保存退出
 
 
 
@@ -133,8 +225,51 @@ docker run 创建并运行容器
 
 
 
+## jar包
+
+jar复制粘贴之后，需要下载解压的
+
+yum install -y lrzsz
+
+
+
+## Docker Compose
+
+下载
+
+
+
+## Docker 镜像仓库
+
+
+
+
+
+## 遇到问题
+
+### 权限不够？
+
+chmod 777
+
+chmod +x /地址  更改权限
+
+
+
+## 作业2021年12月13日
+
+时限：3点-5点
+
++ 安装mysql容器，给mysql挂在本地目录
+
+  ​	将sql语句执行
+
++ 安装redis
++ 安装es，kibana
++ 完成docker-cpmpose的案例，部署微服务集群
+
 
 
 # 完整的安装流程
 
 https://www.icode9.com/content-3-1067574.html
+
